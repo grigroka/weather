@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Weather{% endblock %}
+
+{% block body %}
+
+<div class="example-wrapper">
+    <h1>Weather</h1>
+
+    <ul>
+        <li>{{ date }}</li>
+        <li>{{ weather.dayTemp }}</li>
+        <li>{{ weather.nightTemp }}</li>
+        <li>{{ weather.sky }}</li>
+    </ul>
+</div>
+{% endblock %}
