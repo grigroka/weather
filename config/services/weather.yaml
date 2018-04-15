@@ -10,12 +10,9 @@ services:
         arguments:
          - '@app.google_api.weather_service'
          - '@app.weather.file_system_cache'
-         - '@app.weather.validator_interface'
     app.weather.file_system_cache:
         class: Symfony\Component\Cache\Simple\FilesystemCache
         arguments:
             $namespace: '%weather_cache_namespace%'
             $defaultLifetime: '%weather_cache_default_life_time%'
             $directory: '%weather_cache_directory%'
-    app.weather.validator_interface:
-        class: Symfony\Component\Validator\Validator\ValidatorInterface
