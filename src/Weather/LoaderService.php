@@ -11,7 +11,10 @@ namespace App\Weather;
 use App\GoogleApi\WeatherService;
 use App\Model\Weather;
 use Symfony\Component\Cache\Simple\FilesystemCache;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Validator\Validation;
+use Symfony\Component\Validator\Constraints\Date;
+use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
+use Symfony\Component\Validator\Constraints\LessThanOrEqual;
 
 class LoaderService
 {
@@ -26,24 +29,16 @@ class LoaderService
     private $cacheService;
 
     /**
-     * @var ValidatorInterface
-     */
-    private $validationService;
-
-    /**
      * LoaderService constructor.
      * @param WeatherService $googleWeatherService
      * @param FilesystemCache $cacheService
-     * @param ValidatorInterface $validationService
      */
     public function __construct(
         WeatherService $googleWeatherService,
-        FilesystemCache $cacheService,
-        ValidatorInterface $validationService
+        FilesystemCache $cacheService
     ) {
         $this->googleWeatherService = $googleWeatherService;
         $this->cacheService = $cacheService;
-        $this->validationService = $validationService;
     }
 
     /**
@@ -63,7 +58,6 @@ class LoaderService
             $weather = $this->googleWeatherService->getToday($day);
             $this->cacheService->set($cacheKey, $weather);
         }
-
         return $weather;
     }
 
@@ -76,5 +70,22 @@ class LoaderService
         return $day->format('Y-m-d');
     }
 
+    /**
+     * @param $day
+     */
+    public function validateDate($day)
+    {
+        $validator = Validation::createValidator();
+        $violations = $validator->validate($day, [
+            new Date(),
+            new GreaterThanOrEqual(date('Y-m-d')),
+            new LessThanOrEqual(date('Y-m-d', strtotime('+60days')))
+        ]);
 
+        if (0 !== count($violations)) {
+            foreach ($violations as $violation) {
+                echo $violation->getMessage().'<br>';
+            }
+        }
+    }
 }

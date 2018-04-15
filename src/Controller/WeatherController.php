@@ -14,8 +14,9 @@ class WeatherController extends AbstractController
 {
     public function index($day, LoaderService $loaderService)
     {
+        $validDay = $loaderService->validateDate($day);
         try {
-            $weather = $loaderService->loadWeatherByDay(new \DateTime($day));
+            $weather = $loaderService->loadWeatherByDay(new \DateTime($validDay));
         } catch (\Exception $exp) {
             $weather = new NullWeather();
         }
