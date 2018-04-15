@@ -72,6 +72,7 @@ class LoaderService
 
     /**
      * @param $day
+     * @return mixed
      */
     public function validateDate($day)
     {
@@ -86,6 +87,8 @@ class LoaderService
             foreach ($violations as $violation) {
                 echo $violation->getMessage().'<br>';
             }
+        } else {
+            return $day;
         }
     }
 }
